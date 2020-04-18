@@ -12,7 +12,7 @@
             "sizes": "172x172"
         }
     ],
-    "start_url": "/index.html",
+    "start_url": "https://rachfal.github.io/2048/index.html",
     "display": "standalone",
     "background_color": "#faf8ef",
     "theme_color": "#cebdae"
