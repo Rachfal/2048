@@ -13,7 +13,7 @@ module.exports = {
         // contentBase: path.join(__dirname, "dist"),
         // host: '192.168.1.110',
         compress: true,
-        port: 3004,
+        port: 3000,
         historyApiFallback: true
     },
     module: {
@@ -39,17 +39,7 @@ module.exports = {
                 test: /\.scss$/,
                 use: [
                     { loader: 'style-loader' },
-                    {
-                      loader: 'css-loader' },
-                    {
-                      loader: 'postcss-loader',
-                      options: {
-                        sourceMap: true,
-                        config: {
-                          path: 'postcss.config.js'
-                        }
-                      }
-                    },
+                    { loader: 'css-loader' },
                     { loader: 'sass-loader' }
                   ]
             }
