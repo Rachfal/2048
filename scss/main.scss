@@ -13,6 +13,7 @@ $color-bg: #faf8ef;
 
 body,
 html {
+    -webkit-overflow-scrolling: touch;
     margin: 0;
     padding: 0;
     background: $color-bg;
@@ -76,7 +77,6 @@ button {
     font-size: 50px;
 
     button {
-        margin-bottom: 10px;
         font-weight: bold;
         margin-right: 10px;
     }
@@ -119,6 +119,7 @@ button {
 .menu-return {
     display: none;
     line-height: 0;
+    height: 30px;
 }
 
 .menu-undo {
@@ -135,7 +136,7 @@ button {
 .menu-rules,
 .menu-best {
     padding-top: 80px;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     width: 100vw;
     position: absolute;
     top: 0;
@@ -149,11 +150,12 @@ button {
 }
 
 .menu h1 {
-    font-size: 70px;
+    font-size: 65px;
     display: flex;
     background: #bdad9e;
     border-radius: 5px;
     padding: 4px;
+    height: 86px;
 
     span {
         display: flex;
@@ -162,8 +164,8 @@ button {
         transition: linear $tout;
         font-weight: bold;
         border-radius: 4px;
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
         margin: 4px;
     }
     span:nth-child(1) {
@@ -182,6 +184,42 @@ button {
 
 .menu-new {
     display: none;
+}
+
+.menu-new-alert {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: calc(var(--vh, 1vh) * 100);
+    background: rgba($color-bg, 0.95);
+    position: absolute;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+    z-index: 1000000;
+    color: $color-white;
+    font-size: 30px;
+}
+
+.menu-new-alert div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #5f564d;
+    width: 300px;
+    height: 200px;
+    border-radius: 20px;
+    position: relative;
+    padding: 0;
+
+    span {
+        content: "x";
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        cursor: pointer;
+    }
 }
 
 .menu-new h2 {
@@ -231,14 +269,13 @@ button {
     font-size: 20px;
 }
 
-
 .menu-new input {
     color: inherit;
     font-weight: bold;
     font-size: inherit;
     display: inline-block;
     text-align: center;
-    width: 40px;
+    width: 50px;
 }
 
 .menu-new input {
@@ -263,8 +300,7 @@ button {
     transition: 500ms ease-in-out;
     &:hover {
         background: #5f564d;
-        transform: scale(1.05)
-        
+        transform: scale(1.05);
     }
 }
 
@@ -277,7 +313,6 @@ button {
     overflow-y: scroll;
     width: 300px;
     border: 4px solid #cabcae;
-    
 }
 
 .menu-best {
@@ -300,7 +335,6 @@ button {
         padding: 5px;
         border: 2px solid #cabcae;
     }
-
 }
 
 .menu-rules {
@@ -381,7 +415,7 @@ button {
     text-align: center;
     margin-left: 10px;
     border-radius: 5px;
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 .game-over {
