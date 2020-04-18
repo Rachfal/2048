@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+    <title>2048</title>
+
+
+    <link rel="manifest" href="./manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#cebdae">
+    <meta name="apple-mobile-web-app-title" content="2048">
+    <link rel="apple-touch-icon" href="./img/logo.png">
+    <meta name="description" content="2048 game">
+    <meta name="theme-color" content="#cebdae" />
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="menu">
+            <div class="menu-buttons">
+                <div class="menu-buttons-menu">
+                    <button class="menu-burger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <button class="menu-return">↻</button>
+                </div>
+                <button class="menu-undo">↻</button>
+            </div>
+
+            <div class="menu-main menu-active">
+                <h1>
+                    <span>2</span>
+                    <span>0</span>
+                    <span>4</span>
+                    <span>8</span>
+                </h1>
+                <ul>
+                    <li id="menu-continue">Continue</li>
+                    <li id="menu-new">New Game</li>
+                    <!-- <li id="menu-load">Load Game</li> -->
+                    <li id="menu-best">Best Scores</li>
+                    <li id="menu-rules">How to play</li>
+                </ul>
+            </div>
+            <div class="menu-continue">
+                <h2 class="menu-continue-warning">Try starting a new game</h2>
+            </div>
+            <div class="menu-new">
+                <h2>Choose your game-board size</h2>
+                <ul>
+                    <li data-x="3" data-y="3"><span>3</span> x <span>3</span></li>
+                    <li data-x="4" data-y="4"><span>4</span> x <span>4</span></li>
+                    <li data-x="6" data-y="6"><span>6</span> x <span>6</span></li>
+                    <li data-x="8" data-y="8"><span>8</span> x <span>8</span></li>
+                    <li data-x="" data-y=""><input id="inputX" type="number"> x <input id="inputY" type="number">
+                        <p>Custom (max 16)</p>
+                    </li>
+                </ul>
+                <button id="menu-new-ok">START</button>
+            </div>
+            <div class="menu-best">
+                <h2 class="menu-best-warning">Try starting a new game</h2>
+                <div class="menu-best-container">
+                    <table>
+                        <tbody class="menu-best-table-standard">
+                            <tr>
+                                <th>Game Board</th>
+                                <th>Best Score</th>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Standard games</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody class="menu-best-table-custom">
+                            <tr>
+                                <th colspan="2">Custom games</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="menu-rules">
+                <h2>How to play</h2>
+                <div>
+                    <p>The goal is to get a single square to be 2048 (or more!) <br>
+                        Get two of the same number next to each other to add them together<br>
+                        You can undo one move backwards</p>
+
+                </div>
+
+                <div class="menu-rules-row">
+                    <div>Action</div>
+                    <div>Keyboard</div>
+                    <div>Touch screen</div>
+                </div>
+                <div class="menu-rules-row">
+                    <div>Move</div>
+                    <div>
+                        <div class="key-arrows">
+                            <div>
+                                <span class="key">↑</span>
+                            </div>
+                            <div>
+                                <span class="key">←</span>
+                                <span class="key">↓</span>
+                                <span class="key">→</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div><img src="./img/swipe.svg" alt="Swipe"></div>
+                </div>
+                <div class="menu-rules-row">
+                    <div>Undo</div>
+                    <div><span class="key">U</span></div>
+                    <div style="font-size: 40px">↻</div>
+                </div>
+                <div class="icons">Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect"
+                        title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/"
+                        title="Flaticon">www.flaticon.com</a></div>
+            </div>
+
+        </div>
+
+
+        <header class="header">
+            <div class="header-score">
+                <div>
+                    <p>SCORE</p>
+                    <h2 id="score">0</h2>
+                </div>
+                <div>
+                    <p>BEST</p>
+                    <h2 id="best">0</h2>
+                </div>
+            </div>
+        </header>
+
+
+    </div> <!-- container -->
+    <div class="grid-container">
+        <div class="grid-game">
+            <div class="game-over">
+                <div>
+                    <h2>Game Over</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/out.js"></script>
+</body>
+
+</html>
