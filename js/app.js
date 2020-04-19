@@ -19,6 +19,7 @@ const menuReturn = document.querySelector(".menu-return");
 const menuUndo = document.querySelector(".menu-undo");
 const gridGame = document.querySelector(".grid-game");
 const gridGameOver = document.querySelector(".game-over");
+const menuNewAlert = document.querySelector(".menu-new-alert")
 
 
 // GRID
@@ -392,15 +393,15 @@ startEvents();
 
 // MENU
 menuReturn.addEventListener("click", e => {
-    document.querySelector(".menu-active").classList.toggle("menu-active");
+    document.querySelectorAll(".menu-active").forEach(el => {
+        el.classList.toggle("menu-active");
+    })
     menuMain.classList.toggle("menu-active");
     menuReturn.style.display = "none";
 })
 
 // CONTINUE
 document.querySelector("#menu-continue").addEventListener("click", e => {
-    
-
     m = parseInt(localStorage.getItem(`lastM`));
     n = parseInt(localStorage.getItem(`lastN`));
     score = parseInt(localStorage.getItem(`lastScore`));
@@ -445,8 +446,8 @@ document.querySelector("#inputX").addEventListener("change", e => {
     document.querySelector(".menu-new li:last-of-type").classList.toggle("selected");
 })
 
-document.querySelector(".menu-new-alert span").addEventListener("click", e => {
-    document.querySelector(".menu-new-alert").style.display = "none";
+menuNewAlert.querySelector("span").addEventListener("click", e => {
+    menuNewAlert.classList.toggle("menu-active");
 })
 
 document.querySelector('#menu-new-ok').addEventListener("click", e => {
@@ -457,18 +458,18 @@ document.querySelector('#menu-new-ok').addEventListener("click", e => {
     
     
     if (m > 16 || n > 16) {
-        document.querySelector(".menu-new-alert").style.display = "flex";
-        document.querySelector(".menu-new-alert h3").innerText = "Max 16";
+        menuNewAlert.classList.toggle("menu-active");
+        menuNewAlert.querySelector("h3").innerText = "Max 16";
         return null
     }
     if (m <= 0 || n <= 0) {
-        document.querySelector(".menu-new-alert").style.display = "flex";
-        document.querySelector(".menu-new-alert h3").innerText = "Min 1";
+        menuNewAlert.classList.toggle("menu-active");
+        menuNewAlert.querySelector("h3").innerText = "Min 1";
         return null
     }
     if (typeof m / 1 === NaN || typeof n / 1 === NaN) {
-        document.querySelector(".menu-new-alert").style.display = "flex";
-        document.querySelector(".menu-new-alert h3").innerText = "You have to type a number";
+        menuNewAlert.classList.toggle("menu-active");
+        menuNewAlert.querySelector("h3").innerText = "You have to type a number";
         return null
     }
 
