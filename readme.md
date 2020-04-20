@@ -4,7 +4,7 @@ My version of popular 2048 mobile game.<br>
 
 Original concept was based on 1024 by Veewo Studio and conceptually similar to Threes by Asher Vollmer.
 
-Link to demo **https://github.com/Rachfal/2048**
+Link to demo **https://rachfal.github.io/2048/**
 
 
 ## Features:
