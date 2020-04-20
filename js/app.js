@@ -11,15 +11,17 @@ let arrPrev = [];
 let moved = false;
 let scale = 1;
 let eventRun = false;
-
+let muted = true;
 
 const menuMain = document.querySelector(".menu-main");
+const menuNew = document.querySelector(".menu-new")
 const menuBurger = document.querySelector(".menu-burger");
 const menuReturn = document.querySelector(".menu-return");
 const menuUndo = document.querySelector(".menu-undo");
+const menuSound = document.querySelector(".menu-sound")
 const gridGame = document.querySelector(".grid-game");
 const gridGameOver = document.querySelector(".game-over");
-const menuNewAlert = document.querySelector(".menu-new-alert")
+const menuNewAlert = document.querySelector(".menu-new-alert");
 
 
 // GRID
@@ -53,10 +55,14 @@ function generateArray(m, n) {
 }
 
 // BOX
-function createBox(x, y, val) {
+function createBox(x, y, val, destination) {
     const newBox = document.createElement("div");
     newBox.classList.add(`box`);
-    newBox.classList.add(`box-${x}-${y}`);
+
+    if (!(x === "" || y === "")) {
+        newBox.classList.add(`box-${x}-${y}`);
+    }
+
     if (val < 100000) {
         newBox.classList.add(`box-${val}`);
         newBox.innerText = `${val}`;
@@ -64,7 +70,7 @@ function createBox(x, y, val) {
         newBox.classList.add(`box-131072`);
         newBox.innerText = Math.floor(val / 1000) + "k";
     }
-    gridGame.appendChild(newBox);
+    destination.appendChild(newBox);
 }
 
 function randomBox() {
@@ -86,14 +92,14 @@ function randomBox() {
 
     const val = Math.floor(Math.random() * (10) + 1) <= 7 ? 2 : 4;
     arr[x][y] = val;
-    createBox(x, y, val);
+    createBox(x, y, val, gridGame);
 }
 
 function generateFromArray(arr) {
     for (let i = 0; i < n; i++) {
         for (let j = 0; j < m; j++) {
             if (arr[i][j] !== "") {
-                createBox(i, j, arr[i][j]);
+                createBox(i, j, arr[i][j], gridGame);
             }
         }
     }
@@ -107,14 +113,13 @@ function clearBoxes() {
 
 
 // GAMEPLAY
-
 function gameOver() {
     let over = true;
     for (let i = 0; i < n; i++) {
         for (let j = 0; j < m; j++) {
             if (arr[i][j] === "") {
                 over = false;
-                gridGameOver.style.display = "none"; 
+                gridGameOver.style.display = "none";
                 return false;
             }
         }
@@ -123,7 +128,7 @@ function gameOver() {
         for (let i = 0; i < n - 1; i++) {
             if (arr[i][j] === arr[i + 1][j]) {
                 over = false;
-                gridGameOver.style.display = "none"; 
+                gridGameOver.style.display = "none";
                 return false;
             }
         }
@@ -132,23 +137,27 @@ function gameOver() {
         for (let j = 0; j < m - 1; j++) {
             if (arr[i][j] === arr[i][j + 1]) {
                 over = false
-                gridGameOver.style.display = "none"; 
+                gridGameOver.style.display = "none";
                 return false
             }
         }
     }
     if (over) {
         gridGameOver.style.display = "flex";
+        soundEffect("../sounds/gameover.wav")
     }
 }
 
-function scoreUpdate(points) {
-    score += points
-    if (localStorage.getItem(`best${m}x${n}`) === null) {
+function scoreUpdate() {
+    if (localStorage.getItem(`best${m}x${n}`) === null || score > localStorage.getItem(`best${m}x${n}`)) {
         localStorage.setItem(`best${m}x${n}`, score);
-    }
-    if (score > localStorage.getItem(`best${m}x${n}`)) {
-        localStorage.setItem(`best${m}x${n}`, score);
+        let maxBox = 0;
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < m; j++) {
+                if (arr[i][j] > maxBox) maxBox = arr[i][j];
+            }
+        }
+        localStorage.setItem(`bestBox${m}x${n}`, maxBox);
     }
     document.querySelector("#score").innerText = score;
     document.querySelector("#best").innerText = localStorage.getItem(`best${m}x${n}`);
@@ -177,6 +186,7 @@ function moveSecondLoop(x1, x2, y1, y2, val) {
         eventRun = false;
         box1.style.zIndex = 1;
         moved = true;
+        score += (val * 2);
         setTimeout(() => {
             if (val < 65536) {
                 box1.innerText = val * 2;
@@ -193,7 +203,6 @@ function moveSecondLoop(x1, x2, y1, y2, val) {
             box1.style.zIndex = 0;
             box2.remove();
             eventRun = true;
-            scoreUpdate(val * 2);
 
         }, tout)
         setTimeout(() => {
@@ -293,8 +302,13 @@ function move(dir) {
 
         if (moved) {
             arrPrev = JSON.parse(JSON.stringify(arrTemp));
+            scoreUpdate()
             scorePrev = scoreTemp;
+            soundEffect("../sounds/swipe.wav");
             setTimeout(() => {
+                if (scorePrev !== score) {
+                    soundEffect("../sounds/point.wav")
+                }
                 randomBox();
                 gameOver();
                 localStorage.setItem(`lastArr`, JSON.stringify(arr));
@@ -311,8 +325,8 @@ function undo() {
     arr = [];
     generateFromArray(arrPrev);
     arr = JSON.parse(JSON.stringify(arrPrev));
-    scoreUpdate(parseInt(scorePrev) - parseInt(score));
-    score = scorePrev;
+    score = scorePrev
+    scoreUpdate();
     localStorage.setItem(`lastArr`, JSON.stringify(arr));
     localStorage.setItem(`lastArrPrev`, JSON.stringify(arrPrev));
     localStorage.setItem(`lastScore`, score);
@@ -321,6 +335,19 @@ function undo() {
     gameOver();
 }
 
+function soundEffect(src) {
+    if (!muted) {
+        const newAudio = document.createElement("audio");
+        newAudio.src = src;
+        newAudio.setAttribute("preload", "auto");
+        newAudio.setAttribute("controls", "none");
+        document.body.appendChild(newAudio);
+        newAudio.play()
+        setTimeout(() => {
+            newAudio.remove()
+        }, 2000)
+    }
+}
 
 // OTHER
 function scaleGame() {
@@ -340,16 +367,23 @@ function menuClose() {
     menuBurger.style.display = "flex";
     menuBurger.classList.remove("menu-burger-cross");
     menuReturn.style.display = "none";
-    menuUndo.style.display = "block";   
+    menuUndo.style.display = "block";
+    menuSound.style.display = "none";
 }
 
 
 
 function menuOpen() {
+    if (arr != 0) {
+        document.querySelector("#menu-continue").style.display = "block";
+        document.querySelector("#menu-best").style.display = "block";
+    }
     menuMain.classList.toggle("menu-active");
     menuBurger.classList.add("menu-burger-cross");
     menuReturn.style.display = "none";
     menuUndo.style.display = "none";
+    menuSound.style.display = "block";
+
 }
 
 function startEvents() {
@@ -379,6 +413,21 @@ function startEvents() {
     document.addEventListener('swiped-right', e => {
         move("right");
     })
+
+    {
+        const clickableArr = [];
+        document.body.querySelectorAll("*").forEach(el => {
+            if (getComputedStyle(el).cursor === "pointer") {
+                clickableArr.push(el)
+            }
+        })
+        clickableArr.forEach(el => {
+            el.addEventListener("click", e => {
+                soundEffect("../sounds/menu.wav")
+            })
+        })
+    }
+
 }
 
 
@@ -390,6 +439,11 @@ generateGrid(4, 4);
 setVhVariableForMobile();
 window.addEventListener('resize', setVhVariableForMobile);
 startEvents();
+arr = JSON.parse(localStorage.getItem(`lastArr`));
+if (arr === null) {
+    document.querySelector("#menu-continue").style.display = "none";
+    document.querySelector("#menu-best").style.display = "none";
+}
 
 // MENU
 menuReturn.addEventListener("click", e => {
@@ -399,6 +453,19 @@ menuReturn.addEventListener("click", e => {
     menuMain.classList.toggle("menu-active");
     menuReturn.style.display = "none";
 })
+
+menuSound.addEventListener("click", e => {
+    if (muted) {
+        muted = false;
+        menuSound.querySelector("img").src = "./img/volume-up-solid.svg"
+    } else {
+        muted = true;
+        menuSound.querySelector("img").src = "./img/volume-mute-solid.svg"
+    }
+
+})
+
+
 
 // CONTINUE
 document.querySelector("#menu-continue").addEventListener("click", e => {
@@ -421,42 +488,49 @@ document.querySelector("#menu-continue").addEventListener("click", e => {
     clearGrid();
     generateGrid(m, n);
     generateFromArray(arr);
-    scoreUpdate(0);
+    scoreUpdate();
     scaleGame();
     eventRun = true;
 })
 
+
+
 // NEW GAME
-document.querySelector("#menu-new").addEventListener("click", e => {
+menuMain.querySelector("#menu-new").addEventListener("click", e => {
     menuMain.classList.toggle("menu-active");
     document.querySelector(".menu-new").classList.toggle("menu-active");
     menuReturn.style.display = "block";
 })
 
-document.querySelectorAll(".menu-new li").forEach(el => {
+menuNew.querySelectorAll("li").forEach((el, i) => {
     el.addEventListener("click", e => {
-        document.querySelectorAll(".menu-new li").forEach(el1 => {
+        menuNew.querySelectorAll("li").forEach(el1 => {
             el1.classList.remove("selected");
         })
         el.classList.add("selected");
-    })
-})
+        if (i !== menuNew.querySelectorAll("li").length - 1) {
+            m = menuNew.querySelector("li.selected").dataset.x;
+            n = menuNew.querySelector("li.selected").dataset.y;
+            newGame()
+        }
 
-document.querySelector("#inputX").addEventListener("change", e => {
-    document.querySelector(".menu-new li:last-of-type").classList.toggle("selected");
+    })
 })
 
 menuNewAlert.querySelector("span").addEventListener("click", e => {
     menuNewAlert.classList.toggle("menu-active");
 })
 
-document.querySelector('#menu-new-ok').addEventListener("click", e => {
-    document.querySelector(".menu-new li:last-of-type").dataset.x = document.querySelector("#inputX").value;
-    document.querySelector(".menu-new li:last-of-type").dataset.y = document.querySelector("#inputY").value;
-    m = document.querySelector(".menu-new li.selected").dataset.x;
-    n = document.querySelector(".menu-new li.selected").dataset.y;
-    
-    
+menuNew.querySelector('form').addEventListener("submit", e => {
+    e.preventDefault()
+    menuNew.querySelector("li:last-of-type").dataset.x = menuNew.querySelector("#inputX").value;
+    menuNew.querySelector("li:last-of-type").dataset.y = menuNew.querySelector("#inputY").value;
+    m = menuNew.querySelector("li.selected").dataset.x;
+    n = menuNew.querySelector("li.selected").dataset.y;
+    newGame()
+})
+
+function newGame() {
     if (m > 16 || n > 16) {
         menuNewAlert.classList.toggle("menu-active");
         menuNewAlert.querySelector("h3").innerText = "Max 16";
@@ -481,13 +555,13 @@ document.querySelector('#menu-new-ok').addEventListener("click", e => {
     generateArray(m, n)
     gameOver();
     score = 0;
-    scoreUpdate(0);
+    scoreUpdate();
     scaleGame();
     eventRun = true;
 
     randomBox();
     arrPrev = JSON.parse(JSON.stringify(arr));
-    
+
 
     localStorage.setItem(`lastArr`, JSON.stringify(arr));
     localStorage.setItem(`lastArrPrev`, JSON.stringify(arrPrev));
@@ -497,8 +571,7 @@ document.querySelector('#menu-new-ok').addEventListener("click", e => {
     localStorage.setItem(`lastN`, n);
     scaleGame();
     gameOver();
-})
-
+}
 
 // BEST SCORES
 document.querySelector("#menu-best").addEventListener("click", e => {
@@ -516,7 +589,9 @@ document.querySelector("#menu-best").addEventListener("click", e => {
                 newTr.innerHTML = (`
                     <td>${i} x ${j}</td>
                     <td>${localStorage.getItem(`best${i}x${j}`)} </td>
+                    <td><div class="box-container"></div></td>
                 `)
+                createBox("", "", localStorage.getItem(`bestBox${i}x${j}`), newTr.querySelector(".box-container"));
                 if ((i === 3 && j === 3) || (i === 4 && j === 4) || (i === 6 && j === 6) || (i === 8 && j === 8)) {
                     document.querySelector(".menu-best-table-standard").appendChild(newTr)
                 } else {
@@ -525,14 +600,6 @@ document.querySelector("#menu-best").addEventListener("click", e => {
             }
         }
     }
-
-    if(document.querySelectorAll(".menu-best .newTr").length === 0) {
-        document.querySelector(".menu-best-container").style.display = "none"
-        document.querySelector(".menu-best-warning").style.display = "block"
-    } else {
-        document.querySelector(".menu-best-container").style.display = "block"
-        document.querySelector(".menu-best-warning").style.display = "none"
-    }
 })
 
 // HOW TO PLAY
@@ -540,7 +607,7 @@ document.querySelector("#menu-rules").addEventListener("click", e => {
     menuMain.classList.toggle("menu-active");
     document.querySelector(".menu-rules").classList.toggle("menu-active");
     menuReturn.style.display = "block";
-    
+
 })
 
 
@@ -563,4 +630,3 @@ document.addEventListener("keydown", e => {
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js');
 }
-  

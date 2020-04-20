@@ -30,11 +30,11 @@
                         <span></span>
                         <span></span>
                     </button>
-
-                    <button class="menu-return">↻</button>
+                    <button class="menu-return">⮌</button>
                 </div>
                 <button class="menu-undo">↻</button>
             </div>
+            <button class="menu-sound"><img src="./img/volume-mute-solid.svg"></button>
 
             <div class="menu-main menu-active">
                 <h1>
@@ -50,9 +50,7 @@
                     <li id="menu-rules">How to play</li>
                 </ul>
             </div>
-            <div class="menu-continue">
-                <h2 class="menu-continue-warning">Try starting a new game</h2>
-            </div>
+
             <div class="menu-new">
                 <div class="menu-new-alert">
                     <div>
@@ -66,30 +64,34 @@
                     <li data-x="4" data-y="4"><span>4</span> x <span>4</span></li>
                     <li data-x="6" data-y="6"><span>6</span> x <span>6</span></li>
                     <li data-x="8" data-y="8"><span>8</span> x <span>8</span></li>
-                    <li data-x="" data-y=""><input id="inputX" type="number"> x <input id="inputY" type="number">
-                        <p>Custom (max 16)</p>
+                    <li data-x="" data-y="">
+                        <form>
+                            <input id="inputX" type="number"> x <input id="inputY" type="number">
+                            <p>Custom (max 16)</p>
+                            <button id="menu-new-ok">START</button>
+                        </form>
                     </li>
                 </ul>
-                <button id="menu-new-ok">START</button>
+
             </div>
             <div class="menu-best">
-                <h2 class="menu-best-warning">Try starting a new game</h2>
                 <div class="menu-best-container">
                     <table>
                         <tbody class="menu-best-table-standard">
                             <tr>
                                 <th>Game Board</th>
                                 <th>Best Score</th>
+                                <th>Highest square</th>
                             </tr>
                             <tr>
-                                <th colspan="2">Standard games</th>
+                                <th colspan="3">Standard games</th>
                             </tr>
                         </tbody>
                     </table>
                     <table>
                         <tbody class="menu-best-table-custom">
                             <tr>
-                                <th colspan="2">Custom games</th>
+                                <th colspan="3">Custom games</th>
                             </tr>
                         </tbody>
                     </table>
