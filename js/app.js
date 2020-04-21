@@ -144,7 +144,7 @@ function gameOver() {
     }
     if (over) {
         gridGameOver.style.display = "flex";
-        soundEffect("../sounds/gameover.wav")
+        soundEffect("./sounds/gameover.wav")
     }
 }
 
@@ -304,10 +304,10 @@ function move(dir) {
             arrPrev = JSON.parse(JSON.stringify(arrTemp));
             scoreUpdate()
             scorePrev = scoreTemp;
-            soundEffect("../sounds/swipe.wav");
+            soundEffect("./sounds/swipe.wav");
             setTimeout(() => {
                 if (scorePrev !== score) {
-                    soundEffect("../sounds/point.wav")
+                    soundEffect("./sounds/point.wav")
                 }
                 randomBox();
                 gameOver();
@@ -423,7 +423,7 @@ function startEvents() {
         })
         clickableArr.forEach(el => {
             el.addEventListener("click", e => {
-                soundEffect("../sounds/menu.wav")
+                soundEffect("./sounds/menu.wav")
             })
         })
     }
