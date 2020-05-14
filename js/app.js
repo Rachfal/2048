@@ -1,6 +1,11 @@
 require("../scss/main.scss")
 require("./swiped-events")
 
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js');
+}
+
 const tout = 100;
 let m = 0;
 let n = 0;
@@ -383,6 +388,7 @@ function menuOpen() {
     menuReturn.style.display = "none";
     menuUndo.style.display = "none";
     menuSound.style.display = "block";
+    eventRun = false;
 
 }
 
@@ -626,7 +632,3 @@ document.addEventListener("keydown", e => {
         undo();
     }
 })
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js');
-}
