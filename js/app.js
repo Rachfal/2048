@@ -374,6 +374,7 @@ function menuClose() {
     menuReturn.style.display = "none";
     menuUndo.style.display = "block";
     menuSound.style.display = "none";
+    eventRun = true;
 }
 
 
